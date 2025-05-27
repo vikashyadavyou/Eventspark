@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 export default function Auth() {
-  const [isLogin, setIsLogin] = useState(true);
+  const [isLogin, setIsLogin] = useState(false); // Set false to show Sign Up by default
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">

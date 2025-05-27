@@ -1,17 +1,19 @@
-import { useState } from 'react'
-import './App.css'
-import Auth from './components/Auth'
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Navbar from './components/Navbar';
+import Auth from './components/Auth';
+import Homepage from './components/Homepage';
 
-function App() {
-  const [count, setCount] = useState(0)
+export default function App() {
+  const [isLoggedIn] = useState(false);
 
   return (
-    <>
-      <div className="min-h-screen flex items-center justify-center">
-        <Auth/>
-      </div>
-    </>
-  )
+    <Router>
+      <Navbar isLoggedIn={isLoggedIn} />
+      <Routes>
+        <Route path="/" element={<Homepage/>} />
+        <Route path="/auth" element={<Auth />} />
+      </Routes>
+    </Router>
+  );
 }
-
-export default App
