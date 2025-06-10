@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 
 export default function Auth() {
-  const [isLogin, setIsLogin] = useState(false); // Set false to show Sign Up by default
+  const [isLogin, setIsLogin] = useState(false);
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
     password: '',
-    confirmpassword: '',
-  }
-  )
+    confirmPassword: '',
+  });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -18,22 +17,48 @@ export default function Auth() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!isLogin) {
-      // Sign Up logic
-      if (formData.password !== formData.confirmPassword) {
-        alert("Passwords don't match");
-        return;
-      }
-      console.log('Sign Up Data:', formData);
-    } else {
-      // Login logic
-      console.log('Login Data:', {
-        email: formData.email,
-        password: formData.password,
+    if (!isLogin && formData.password !== formData.confirmPassword) {
+      alert("Passwords don't match");
+      return;
+    }
+
+    const url = isLogin
+      ? 'http://localhost:5000/api/auth/login'
+      : 'http://localhost:5000/api/auth/register';
+
+    const payload = isLogin
+      ? {
+          email: formData.email,
+          password: formData.password,
+        }
+      : {
+          fullName: formData.fullName,
+          email: formData.email,
+          password: formData.password,
+        };
+
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
       });
+
+      const result = await response.json();
+      alert(result.message || 'Success');
+
+      if (result.success && isLogin) {
+        // Navigate to homepage or dashboard
+        window.location.href = '/';
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('An error occurred. Please try again.');
     }
   };
 
