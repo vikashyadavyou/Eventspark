@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from './ParticipantAuthContext'; // ✅ Updated import path
 
 export default function Auth() {
   const [isLogin, setIsLogin] = useState(false);
@@ -8,6 +10,9 @@ export default function Auth() {
     password: '',
     confirmPassword: '',
   });
+
+  const { login } = useAuth(); // ✅ Login function from context
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -50,11 +55,19 @@ export default function Auth() {
       });
 
       const result = await response.json();
+
+      if (!response.ok) {
+        alert(result.message || 'Error occurred');
+        return;
+      }
+
       alert(result.message || 'Success');
 
-      if (result.success && isLogin) {
-        // Navigate to homepage or dashboard
-        window.location.href = '/';
+      if (isLogin) {
+        login(result.user); // ✅ store user in context
+        navigate('/participant/homepage');
+      } else {
+        setIsLogin(true); // Switch to login after successful signup
       }
     } catch (error) {
       console.error('Error:', error);

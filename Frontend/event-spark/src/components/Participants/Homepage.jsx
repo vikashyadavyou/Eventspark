@@ -1,5 +1,5 @@
 import React from 'react';
-import EventCard from '../components/Eventcard'; // adjust path as needed
+import EventCard from './Eventcard'; // adjust path as needed
 
 export default function Home() {
   const eventList = [
@@ -13,7 +13,7 @@ export default function Home() {
     {
       id: 2,
       title: 'Startup Expo',
-      description: 'Meet startup founders and investors.',
+      description: 'Meet startup founders and investors and co-founders.',
       date: 'August 12, 2025',
       image: 'https://source.unsplash.com/400x200/?startup',
     },
