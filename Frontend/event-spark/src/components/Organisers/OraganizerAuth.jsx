@@ -1,7 +1,9 @@
-// src/components/Organisers/OrganizerAuth.jsx
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function OrganizerAuth() {
+  const navigate = useNavigate();
+  
   const [isLogin, setIsLogin] = useState(true);
 
   const [formData, setFormData] = useState({
@@ -20,12 +22,46 @@ export default function OrganizerAuth() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (isLogin) {
-      console.log("Logging in as organiser:", formData);
-    } else {
-      console.log("Signing up organiser:", formData);
+
+    const url = isLogin
+      ? "http://localhost:5000/api/organizer/login"
+      : "http://localhost:5000/api/organizer/register";
+
+    const payload = isLogin
+      ? {
+          email: formData.email,
+          password: formData.password,
+        }
+      : {
+          name: formData.organisationName,
+          email: formData.email,
+          phone: formData.phone,
+          password: formData.password,
+        };
+
+    try {
+      const res = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        alert(`${isLogin ? "Login" : "Signup"} successful!`);
+        console.log(data);
+        navigate("/organizer/dashboard");
+      } else {
+        alert(data.message || "Something went wrong");
+      }
+    } catch (error) {
+      alert("Server error");
+      console.error(error);
     }
   };
 
