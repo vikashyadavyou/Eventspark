@@ -55,7 +55,7 @@ export default function OrganizerDashboard() {
             <button
               onClick={() => {
                 alert("Logged out (connect to backend later)");
-                navigate("/organiser/auth");
+                navigate("/organizer/auth");
               }}
               className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
             >
