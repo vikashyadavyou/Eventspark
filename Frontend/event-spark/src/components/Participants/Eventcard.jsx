@@ -5,7 +5,7 @@ export default function EventCard({ event }) {
   const navigate = useNavigate();
 
   const handleRegisterClick = () => {
-    navigate(`/register/`, { state: { event } });
+    navigate(`/participant/register/`, { state: { event } });
   };
 
   return (
