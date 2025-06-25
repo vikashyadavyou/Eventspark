@@ -2,6 +2,7 @@
 import { Router } from 'express';
 import { hash, compare } from 'bcrypt';
 import Organizer from '../models/organizer.js';
+import jwt from 'jsonwebtoken';
 
 const router = Router();
 
@@ -25,6 +26,8 @@ router.post('/register', async (req, res) => {
 });
 
 // LOGIN
+
+
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
@@ -34,11 +37,22 @@ router.post('/login', async (req, res) => {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
 
-    res.status(200).json({ message: 'Login successful', organizer });
+    // 🔐 Generate token
+    const token = jwt.sign({ id: organizer._id }, "superstrongsecretkey123!", {
+      expiresIn: '7d',
+    });
+
+    // Return both organizer and token
+    res.status(200).json({
+      message: 'Login successful',
+      organizer,
+      token,
+    });
   } catch (err) {
     console.error('Organizer login error:', err);
     res.status(500).json({ message: 'Server error' });
   }
 });
+
 
 export default router;

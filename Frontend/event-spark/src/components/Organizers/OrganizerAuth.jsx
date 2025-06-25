@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useOrganizerAuth } from "./Pages/OrganizerAuthContext"; // ✅ Import context
 
 export default function OrganizerAuth() {
   const navigate = useNavigate();
-  
-  const [isLogin, setIsLogin] = useState(true);
+  const { login } = useOrganizerAuth(); // ✅ Use login from context
 
+  const [isLogin, setIsLogin] = useState(true);
   const [formData, setFormData] = useState({
     organisationName: "",
     email: "",
@@ -55,10 +56,18 @@ export default function OrganizerAuth() {
       if (res.ok) {
         alert(`${isLogin ? "Login" : "Signup"} successful!`);
         console.log(data);
+
+        // ✅ Save token in localStorage
+        if (data.token) {
+          localStorage.setItem("organizerToken", data.token);
+        }
+
+        // ✅ Save organizer info in context
+        login(data.organizer || data);
+
         navigate("/organizer/dashboard");
-      } else {
-        alert(data.message || "Something went wrong");
       }
+
     } catch (error) {
       alert("Server error");
       console.error(error);

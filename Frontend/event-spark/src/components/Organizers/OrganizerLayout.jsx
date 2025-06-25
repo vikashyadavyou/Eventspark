@@ -1,18 +1,16 @@
 // src/components/Organisers/OrganizerLayout.jsx
 import React from "react";
 import { Outlet } from "react-router-dom";
-import OrganizerNavbar from "./OrganizerNavbar"; // Top navbar
+import OrganizerNavbar from "./OrganizerNavbar";
+import { OrganizerAuthProvider } from "./Pages/OrganizerAuthContext";
 
 export default function OrganizerLayout() {
   return (
-    <div className="flex flex-col min-h-screen">
-      {/* Top Navbar */}
+    <OrganizerAuthProvider>
       <OrganizerNavbar />
-
-      {/* Page Content */}
-      <main className="flex-1 p-4 bg-gray-100">
+      <main className="p-4">
         <Outlet />
       </main>
-    </div>
+    </OrganizerAuthProvider>
   );
 }

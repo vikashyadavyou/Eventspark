@@ -1,28 +1,49 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useOrganizerAuth } from "./OrganizerAuthContext";
 
 export default function OrganizerProfile() {
-  const organizer = {
-    organizationName: "EventSpark Org",
-    email: "organiser@example.com",
-    phone: "+91 9876543210",
-    avatarUrl: "https://i.pravatar.cc/150?img=5",
-  };
+  const navigate = useNavigate();
+  const { organizer, logout, isLoggedIn } = useOrganizerAuth();
+
+  useEffect(() => {
+    if (!isLoggedIn) {
+      navigate("/organizer/auth");
+    }
+  }, [isLoggedIn, navigate]);
+
+  if (!isLoggedIn || !organizer) return null;
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-      <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full text-center">
-        <img
-          src={organizer.avatarUrl}
-          alt="Organizer"
-          className="w-24 h-24 mx-auto rounded-full mb-4"
-        />
-        <h2 className="text-2xl font-bold">{organizer.organizationName}</h2>
-        <p className="text-gray-700">{organizer.email}</p>
-        <p className="text-gray-600">{organizer.phone}</p>
+    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
+      <div className="bg-white shadow-lg rounded-lg p-8 max-w-md w-full text-center relative">
+        <button
+          onClick={() => navigate(-1)}
+          className="absolute top-4 left-4 text-blue-600 hover:underline text-sm"
+        >
+          ← Back
+        </button>
 
-        <div className="mt-4">
+        <img
+          src="https://i.pravatar.cc/150?u=organizer"
+          alt="Organizer Avatar"
+          className="w-24 h-24 mx-auto rounded-full shadow mb-4"
+        />
+        <h2 className="text-2xl font-bold">{organizer.fullName}</h2>
+        <p className="text-gray-600">{organizer.email}</p>
+
+        <div className="mt-6 space-x-4">
           <button className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
             Edit Profile
+          </button>
+          <button
+            className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+            onClick={() => {
+              logout();
+              navigate("/organizer/auth");
+            }}
+          >
+            Logout
           </button>
         </div>
       </div>

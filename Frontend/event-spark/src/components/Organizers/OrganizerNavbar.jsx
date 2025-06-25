@@ -1,11 +1,14 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useOrganizerAuth } from "./Pages/OrganizerAuthContext";
 
 export default function OrganizerNavbar() {
   const navigate = useNavigate();
+  const { logout, isLoggedIn, user } = useOrganizerAuth?.() || {};
 
   const handleLogout = () => {
     localStorage.removeItem("organizerToken");
+    if (logout) logout();
     navigate("/organizer/auth");
   };
 
@@ -15,7 +18,7 @@ export default function OrganizerNavbar() {
         <Link to="/organizer/dashboard">EventSpark (Organiser)</Link>
       </h1>
 
-      <div className="space-x-6 text-sm">
+      <div className="space-x-6 text-sm flex items-center">
         <Link to="/organizer/dashboard" className="hover:underline">
           Dashboard
         </Link>
@@ -28,6 +31,13 @@ export default function OrganizerNavbar() {
         <Link to="/organizer/profile" className="hover:underline">
           Profile
         </Link>
+
+        {isLoggedIn && user && (
+          <span className="text-sm italic text-gray-200 mx-2">
+            Welcome, {user.fullName}
+          </span>
+        )}
+
         <button
           onClick={handleLogout}
           className="bg-red-500 px-3 py-1 rounded hover:bg-red-600 ml-2"

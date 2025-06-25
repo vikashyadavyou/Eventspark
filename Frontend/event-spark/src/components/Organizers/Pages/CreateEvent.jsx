@@ -18,17 +18,52 @@ export default function CreateEvent() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Event Created:", eventData);
-    alert("Event created successfully (Demo only)");
-    // In real app: send data to backend here
+
+    const token = localStorage.getItem("organizerToken");
+    if (!token) {
+      alert("Unauthorized: No token found");
+      return;
+    }
+
+    try {
+      const res = await fetch("http://localhost:5000/api/organizer/events", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(eventData),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        alert("Event created successfully!");
+        setEventData({
+          title: "",
+          description: "",
+          date: "",
+          time: "",
+          venue: "",
+          coverImage: "",
+        });
+      } else {
+        alert(data.message || "Failed to create event");
+      }
+    } catch (error) {
+      console.error("Create event error:", error);
+      alert("Server error");
+    }
   };
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
       <div className="bg-white p-8 rounded shadow-md w-full max-w-xl">
-        <h2 className="text-2xl font-bold mb-6 text-blue-600 text-center">Create New Event</h2>
+        <h2 className="text-2xl font-bold mb-6 text-blue-600 text-center">
+          Create New Event
+        </h2>
         <form className="space-y-4" onSubmit={handleSubmit}>
           <input
             type="text"
