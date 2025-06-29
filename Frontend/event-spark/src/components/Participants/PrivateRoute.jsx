@@ -5,5 +5,5 @@ import { useAuth } from "./ParticipantAuthContext";
 
 export default function PrivateRoute({ children }) {
   const { isLoggedIn } = useAuth();
-  return isLoggedIn ? children : <Navigate to="/participants/auth" />;
+  return isLoggedIn ? children : <Navigate to="/participant/auth" />;
 }

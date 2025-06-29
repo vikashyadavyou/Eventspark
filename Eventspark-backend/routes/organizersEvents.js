@@ -50,4 +50,17 @@ router.get("/my-events", authenticateOrganizer, async (req, res) => {
   }
 });
 
+router.get('/events', async (req, res) => {
+  try {
+    const events = await Event.find()
+      .populate('organizer', 'name') // 👈 populate only organizer name
+      .sort({ createdAt: -1 });
+
+    res.json({ events });
+  } catch (err) {
+    console.error('Public fetch events error:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 export default router;

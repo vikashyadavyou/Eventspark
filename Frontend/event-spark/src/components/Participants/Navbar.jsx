@@ -37,7 +37,7 @@ export default function Navbar() {
 
   return (
     <nav className="bg-white shadow px-6 py-4 flex justify-between items-center">
-      <Link to="/participants/homepage" className="text-xl font-bold text-blue-600">
+      <Link to="/participant/homepage" className="text-xl font-bold text-blue-600">
         EventSpark
       </Link>
 
